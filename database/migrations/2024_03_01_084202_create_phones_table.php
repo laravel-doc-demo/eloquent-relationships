@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // users.id
-            $table->unsignedBigInteger('member_id'); // users.id
-            $table->uuid('user_uuid'); // users.uuid
-            $table->string('area_code');
-            $table->integer('number');
+            $table->unsignedBigInteger('user_id')->nullable(); // users.id
+            $table->unsignedBigInteger('member_id')->nullable(); // users.id
+            $table->uuid('user_uuid')->nullable(); // users.uuid
+            $table->string('number');
             $table->timestamps();
         });
     }

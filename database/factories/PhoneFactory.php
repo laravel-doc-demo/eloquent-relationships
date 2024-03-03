@@ -17,7 +17,6 @@ class PhoneFactory extends Factory
     public function definition(): array
     {
         return [
-            'area_code' => '886',
             'number' => fake()->phoneNumber(),
         ];
     }
@@ -25,10 +24,12 @@ class PhoneFactory extends Factory
     /**
      * Indicate that the model's email address should be unverified.
      */
-    public function addRelationship(): static
+    public function addRelationship($userId, $uuid): static
     {
         return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+            'user_id' => $userId,
+            'member_id' => $userId,
+            'user_uuid' => $uuid,
         ]);
     }
 }

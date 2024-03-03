@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
          \App\Models\User::factory(1)->create()->each(function ($user) {
-             dd($user->id);
+             \App\Models\Phone::factory(1)->addRelationship($user->id, $user->uuid)->create();
          });
 
         // \App\Models\User::factory()->create([
