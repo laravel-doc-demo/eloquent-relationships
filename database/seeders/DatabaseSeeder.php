@@ -3,8 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Car;
 use App\Models\Comment;
+use App\Models\Mechanic;
 use App\Models\Order;
+use App\Models\Owner;
 use App\Models\Phone;
 use App\Models\Post;
 use App\Models\User;
@@ -36,6 +39,7 @@ class DatabaseSeeder extends Seeder
 
         $this->generatePostAndComment();
         $this->generateOrder();
+        $this->generateCarOwnerMechanics();
     }
 
     private function generatePostAndComment()
@@ -66,6 +70,22 @@ class DatabaseSeeder extends Seeder
 //        }
 
         Order::factory(5)->addRelationship(1)->create();
+    }
+
+    private function generateCarOwnerMechanics()
+    {
+        $mechanicIds = Mechanic::factory(10)->create()->pluck('id')->toArray();
+
+        shuffle($mechanicIds);
+        $carIds = [];
+        foreach ($mechanicIds as $id) {
+            $carIds[] = Car::factory(1)->assignMechanic($id)->create()->first()->id;
+        }
+
+        shuffle($carIds);
+        foreach ($carIds as $id) {
+            Owner::factory(1)->assignCar($id)->create();
+        }
     }
 
     /**
