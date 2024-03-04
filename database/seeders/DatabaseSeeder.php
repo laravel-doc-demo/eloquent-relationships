@@ -13,6 +13,8 @@ use App\Models\Owner;
 use App\Models\Phone;
 use App\Models\Post;
 use App\Models\Project;
+use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -44,6 +46,7 @@ class DatabaseSeeder extends Seeder
         $this->generateOrder();
         $this->generateCarOwnerMechanics();
         $this->generateProject();
+        $this->generateRole();
     }
 
     private function generatePostAndComment()
@@ -110,8 +113,8 @@ class DatabaseSeeder extends Seeder
             'Testing',
         ];
         foreach ($projIds as $projId) {
-            $times = rand(1,4);
-            for ($i = 0; $i < $times; $i++){
+            $times = rand(1, 4);
+            for ($i = 0; $i < $times; $i++) {
                 Environment::factory(1)
                     ->assignProjectId($projId)
                     ->specificName($names[$i])
@@ -119,6 +122,32 @@ class DatabaseSeeder extends Seeder
                     ->each(function ($env) use ($times) {
                         Deployment::factory($times)->assignEnvironmentId($env->id)->create();
                     });
+            }
+        }
+    }
+
+    private function generateRole()
+    {
+        $roles = [
+            'Admin',
+            'Guest',
+            'Editor',
+            'User'
+        ];
+        foreach ($roles as $role) {
+            Role::factory(1)->specificName($role)->create();
+        }
+
+        $rolesIds = [1, 2, 3, 4];
+        $userIds = $this->getUserIds();
+        foreach ($userIds as $id) {
+            shuffle($rolesIds);
+            $times = rand(1, 4);
+            for ($i = 0; $i < $times; $i++) {
+                RoleUser::factory(1)
+                    ->buildRelationship($id)
+                    ->buildRelationship($rolesIds[$i], 'role_id')
+                    ->create();
             }
         }
     }
