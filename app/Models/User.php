@@ -81,4 +81,29 @@ class User extends Authenticatable
         // return $this->hasOne(Phone::class, 'foreign_key', 'local_key');
         return $this->hasOne(Phone::class, 'user_uuid', 'uuid');
     }
+
+    // TODO: Has One of Many
+    /**
+     * 取得 user 最新的訂單。
+     */
+    public function latestOrder(): HasOne
+    {
+        return $this->hasOne(Order::class)->latestOfMany();
+    }
+
+    /**
+     * 取得 user 最舊的訂單。
+     */
+    public function oldestOrder(): HasOne
+    {
+        return $this->hasOne(Order::class)->oldestOfMany();
+    }
+
+    /**
+     * 取得 user 最貴的訂單
+     */
+    public function largestOrder(): HasOne
+    {
+        return $this->hasOne(Order::class)->ofMany('price', 'max');
+    }
 }
