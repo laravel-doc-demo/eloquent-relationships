@@ -11,3 +11,4 @@
 use App\Models\User
 User::find(2)->phone;
 ```
+[file](app/Models/User.php)

@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('deployments', function (Blueprint $table) {
             $table->id();
+            $table->integer('environment_id');
+            $table->string('commit_hash');
             $table->timestamps();
         });
     }
