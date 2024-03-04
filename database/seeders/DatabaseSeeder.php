@@ -11,6 +11,8 @@ use App\Models\Mechanic;
 use App\Models\Order;
 use App\Models\Owner;
 use App\Models\Phone;
+use App\Models\Podcast;
+use App\Models\PodcastUser;
 use App\Models\Post;
 use App\Models\Project;
 use App\Models\Role;
@@ -47,6 +49,7 @@ class DatabaseSeeder extends Seeder
         $this->generateCarOwnerMechanics();
         $this->generateProject();
         $this->generateRole();
+        $this->generatePodcast();
     }
 
     private function generatePostAndComment()
@@ -147,6 +150,24 @@ class DatabaseSeeder extends Seeder
                 RoleUser::factory(1)
                     ->buildRelationship($id)
                     ->buildRelationship($rolesIds[$i], 'role_id')
+                    ->create();
+            }
+        }
+    }
+
+    private function generatePodcast()
+    {
+        $userIds = $this->getUserIds();
+
+        $podcastIds = Podcast::factory(5)->create()->pluck('id')->toArray();
+
+        foreach ($userIds as $userId) {
+            shuffle($podcastIds);
+            $times = rand(1, 4);
+            for ($i = 0; $i < $times; $i++) {
+                PodcastUser::factory(1)
+                    ->buildRelationship($userId)
+                    ->buildRelationship($podcastIds[$i], 'podcast_id')
                     ->create();
             }
         }

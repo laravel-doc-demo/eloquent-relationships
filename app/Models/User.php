@@ -84,6 +84,7 @@ class User extends Authenticatable
     }
 
     // TODO: Has One of Many
+
     /**
      * 取得 user 最新的訂單。
      */
@@ -109,11 +110,46 @@ class User extends Authenticatable
     }
 
     // TODO: Many to Many
+
     /**
      * user 所擁有的 role.
      */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function rolesEx1(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)->withPivot('active', 'created_by');
+    }
+
+    public function rolesEx2(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)->withTimestamps();
+    }
+
+    public function rolesEx3(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)
+            ->withPivot('active', 'created_by')
+            ->withTimestamps();
+    }
+
+    public function rolesEx4(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)
+            ->wherePivot('active', 1)
+            ->withPivot('active', 'created_by')
+            ->withTimestamps();
+    }
+
+
+
+    public function podcasts(): BelongsToMany
+    {
+        return $this->belongsToMany(Podcast::class)
+            ->as('subscription')
+            ->withTimestamps();
     }
 }

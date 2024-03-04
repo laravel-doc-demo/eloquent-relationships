@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RoleUser>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PodcastUser>
  */
-class RoleUserFactory extends Factory
+class PodcastUserFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,8 +17,7 @@ class RoleUserFactory extends Factory
     public function definition(): array
     {
         return [
-            'active' => fake()->boolean,
-            'created_by' => rand(1,5)
+            //
         ];
     }
 

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('role_user', function (Blueprint $table) {
             $table->integer('user_id');
             $table->integer('role_id');
+            $table->boolean('active')->default(false);
+            $table->integer('created_by');
             $table->timestamps();
         });
     }
