@@ -10,6 +10,8 @@ class Role extends Model
 {
     use HasFactory;
 
+    // NOTE: 一樣使 belongsToMany 所以上述介紹的用法這邊也可以用。
+    // Ex: Role::find(1)->users;
     /**
      * 擁有該 role 的 users
      */
@@ -17,6 +19,14 @@ class Role extends Model
     {
         return $this->belongsToMany(User::class);
     }
+    //back
+
+
+
+
+
+
+
 
 
     /**

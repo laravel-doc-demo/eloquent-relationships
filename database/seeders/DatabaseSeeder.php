@@ -7,6 +7,7 @@ use App\Models\Car;
 use App\Models\Comment;
 use App\Models\Deployment;
 use App\Models\Environment;
+use App\Models\Image;
 use App\Models\Mechanic;
 use App\Models\Order;
 use App\Models\Owner;
@@ -22,7 +23,9 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    private $userIds = [];
+    private array $userIds = [];
+
+    private array $postIds = [];
 
     /**
      * Seed the application's database.
@@ -50,6 +53,7 @@ class DatabaseSeeder extends Seeder
         $this->generateProject();
         $this->generateRole();
         $this->generatePodcast();
+        $this->generateImage();
     }
 
     private function generatePostAndComment()
@@ -58,14 +62,18 @@ class DatabaseSeeder extends Seeder
         // post
         // user Null 的 post id = 3
         $times = count($userIds) - 3;
+        $postIds = [];
         for ($i = 1; $i <= $times; $i++) {
             $userId = $i == 3 ? null : array_shift($userIds);
-            Post::factory(1)->assignUser($userId)->create()->each(function ($post) {
+            Post::factory(1)->assignUser($userId)->create()->each(function ($post) use (&$postIds) {
                 $amount = rand(1, 3);
                 Comment::factory($amount)->addRelationship($post->id, $post->uuid)->create();
                 Comment::factory($amount)->addRelationship($post->id, $post->uuid)->specificTitle('foo')->create();
+                $postIds[] = $post->id;
             });
         }
+
+        $this->setPostIds($postIds);
     }
 
     private function generateOrder()
@@ -173,6 +181,32 @@ class DatabaseSeeder extends Seeder
         }
     }
 
+    public function generateImage()
+    {
+        $data = [];
+        foreach ($this->getUserIds() as $id) {
+            $data[] = [
+                'id' => $id,
+                'model' => 'user'
+            ];
+        }
+
+        foreach ($this->getPostIds() as $id) {
+            $data[] = [
+                'id' => $id,
+                'model' => 'post'
+            ];
+        }
+
+        shuffle($data);
+        foreach ($data as $item) {
+            Image::factory(1)
+                ->url($item['model'])
+                ->setIdModel($item['id'], ucfirst($item['model']))
+                ->create();
+        }
+    }
+
     /**
      * @return array
      */
@@ -187,5 +221,21 @@ class DatabaseSeeder extends Seeder
     public function setUserIds(array $userIds): void
     {
         $this->userIds = $userIds;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPostIds(): array
+    {
+        return $this->postIds;
+    }
+
+    /**
+     * @param array $postIds
+     */
+    public function setPostIds(array $postIds): void
+    {
+        $this->postIds = $postIds;
     }
 }
